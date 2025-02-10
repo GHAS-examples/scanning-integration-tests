@@ -22,6 +22,12 @@ jobs:
         with:
             image-tag: sysdiglabs/dummy-vuln-app:latest
             standalone: true
+
+      - name: Upload scan logs as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          path:  /home/runner/work/scanning-integration-tests/scanning-integration-tests/scan-logs
   
       - name: Upload SARIF file
         if: success() || failure() 
