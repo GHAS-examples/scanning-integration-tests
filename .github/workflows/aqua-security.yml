@@ -1,0 +1,23 @@
+name: Aqua security
+on:
+  push:
+    paths:
+      - .github/workflows/aqua-security.yml
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Get vuln application on image
+        uses: actions/checkout@v4
+        with:
+          repository: sysdiglabs/dummy-vuln-app
+  
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
+
+      - name: Aqua Security Trivy
+        uses: aquasecurity/trivy-action@0.29.0
+        with:
+          image-ref: 'sysdiglabs/dummy-vuln-app:latest'
