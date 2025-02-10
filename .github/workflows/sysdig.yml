@@ -16,7 +16,7 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
 
-  	  - name: Get sysdig action repo for the next step
+      - name: Get sysdig action repo for the next step
         uses: actions/checkout@v4
         with:
           repository: sysdiglabs/scan-action
