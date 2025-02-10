@@ -14,14 +14,19 @@ jobs:
 
       - name: Get current repo for reference usage in sarif file
         uses: actions/checkout@v4
+        with:
+          path: scanning-integrations-tests
       
       - name: Get vuln application on image
         uses: actions/checkout@v4
         with:
           repository: sysdiglabs/dummy-vuln-app
+          path: dummy-vuln-app
   
       - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
+        run: |
+          cd dummy-vuln-app
+          docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
 
       - name: Aqua Security Trivy
         uses: aquasecurity/trivy-action@0.29.0
@@ -29,8 +34,13 @@ jobs:
           image-ref: 'sysdiglabs/dummy-vuln-app:latest'
           format: 'sarif'
           output: 'trivy-results.sarif'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          path: 'trivy-results.sarif'
       
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
         with:
+          checkout_path: scanning-integrations-tests
           sarif_file: 'trivy-results.sarif'
