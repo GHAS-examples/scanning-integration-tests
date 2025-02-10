@@ -11,10 +11,25 @@ jobs:
       - name: Get vuln application on image
         uses: actions/checkout@v4
         with:
-          repository: sysdiglabs/dummy-vuln-app          
+          repository: sysdiglabs/dummy-vuln-app
   
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
+
+  	  - name: Get sysdig action repo for the next step
+        uses: actions/checkout@v4
+        with:
+          repository: sysdiglabs/scan-action
+          
+      - name: Donate MainDB from scan to prevent standalone to fail
+        id: donate-db
+        uses: sysdiglabs/scan-action@v5
+        with:
+          # Tag of the image to analyse
+          image-tag: sysdiglabs/dummy-vuln-app:latest
+          stop-on-failed-policy-eval: false
+          stop-on-processing-error: true
+          skip-summary: true
   
       - name: Scan image
         id: scan
