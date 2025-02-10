@@ -7,6 +7,11 @@ jobs:
   sysdig-scan:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Get vuln application on image
+        uses: actions/checkout@v4
+        with:
+          repository: sysdiglabs/dummy-vuln-app          
   
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag sysdiglabs/dummy-vuln-app:latest
