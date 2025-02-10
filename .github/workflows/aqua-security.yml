@@ -12,6 +12,9 @@ jobs:
       security-events: write 
     steps:
 
+      - name: Get current repo for reference usage in sarif file
+        uses: actions/checkout@v4
+      
       - name: Get vuln application on image
         uses: actions/checkout@v4
         with:
